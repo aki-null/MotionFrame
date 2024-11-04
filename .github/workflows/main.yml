@@ -48,7 +48,7 @@ jobs:
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ runner.os }} Build
+          name: ${{ matrix.os }} Build
           path: |
             build/*.exe
             build/*.app/**/*
