@@ -41,6 +41,8 @@ jobs:
           product-name: MotionFrame
           product-version: '1.0'
           copyright: 'aki-null'
+          macos-signed-app-name: 'com.akinull.motionframe'
+          macos-app-name: 'MotionFrame'
           file-description: 'MotionFrame is a tool to analyze flipbook texture and generate motion vector atlas texture'
           include-data-dir: 'app/translation=translation'
 
