@@ -35,7 +35,7 @@ jobs:
           nuitka-version: main
           script-name: app/MotionFrame.py
           standalone: true
-          onefile: false
+          onefile: matrix.os != 'windows-latest'
           enable-plugins: pyside6
           product-name: MotionFrame
           product-version: '1.0'
