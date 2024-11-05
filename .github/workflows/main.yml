@@ -39,7 +39,10 @@ jobs:
           enable-plugins: pyside6
           product-name: MotionFrame
           product-version: '1.0'
+          file-version: '1.0'
+          company-name: 'aki-null.net'
           copyright: 'aki-null'
+          trademarks: 'aki-null'
           file-description: 'MotionFrame is a tool to analyze flipbook texture and generate motion vector atlas texture'
           include-data-dir: 'app/translation=translation'
           macos-create-app-bundle: true
