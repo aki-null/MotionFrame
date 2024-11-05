@@ -265,6 +265,11 @@ class Ui_MotionFrame(object):
 
         self.label_atlas_extrude = QLabel(self.groupbox_atlas)
         self.label_atlas_extrude.setObjectName(u"label_atlas_extrude")
+        sizePolicy.setHeightForWidth(self.label_atlas_extrude.sizePolicy().hasHeightForWidth())
+        self.label_atlas_extrude.setSizePolicy(sizePolicy)
+        self.label_atlas_extrude.setMinimumSize(QSize(200, 0))
+        self.label_atlas_extrude.setTextFormat(Qt.PlainText)
+        self.label_atlas_extrude.setAlignment(Qt.AlignRight|Qt.AlignTrailing|Qt.AlignVCenter)
 
         self.formLayout_2.setWidget(1, QFormLayout.LabelRole, self.label_atlas_extrude)
 
