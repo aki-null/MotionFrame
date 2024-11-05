@@ -52,7 +52,6 @@ jobs:
           certificate: '${{ secrets.CERTIFICATE }}'
           password: '${{ secrets.PASSWORD }}'
           certificatesha1: '${{ secrets.CERTHASH }}'
-          certificatename: '${{ secrets.CERTNAME }}'
           description: 'MotionFrame'
           timestampUrl: 'http://timestamp.digicert.com'
           folder: 'build'
