@@ -81,10 +81,29 @@ python3 MotionFrame.py
 
 [GPL v3.0](https://www.gnu.org/licenses/gpl-3.0.txt)
 
-- Downloading this tool and using the generated texture for your game doesn't contaminate your software with GPL v3.0 license. I would love to be credited however :)
+```
+MotionFrame
+Copyright (C) 2024  Akihiro Noguchi
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+```
+
+- Downloading this tool and using the generated texture for your game doesn't contaminate your software with GPL v3.0 license. I would be happy if you credit me though :)
+
 ## Notes
 
-- Make sure you import the normal texture as linear (non-sRGB) in your game engine
+- Make sure you import the motion vector texture as linear (non-sRGB) in your game engine
 	- In Unity, uncheck sRGB (Color Textire) in texture settings
 - The output includes a JSON file which contains some metadata that are useful for various shader parameters
 	- You can take a look at the JSON file if you forget some properties of the output like the motion strength and total number of frames
