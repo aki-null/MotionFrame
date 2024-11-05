@@ -35,7 +35,7 @@ jobs:
           nuitka-version: main
           script-name: app/MotionFrame.py
           standalone: true
-          onefile: true
+          onefile: false
           enable-plugins: pyside6
           product-name: MotionFrame
           product-version: '1.0'
@@ -66,6 +66,5 @@ jobs:
         with:
           name: ${{ matrix.os }} Build
           path: |
-            build/*.exe
-            build/*.app/**/*
+            build
           include-hidden-files: true
