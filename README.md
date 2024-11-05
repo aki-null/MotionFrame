@@ -32,7 +32,7 @@ See the [reference shader implementation (MIT)](https://github.com/aki-null/Unit
 
 ### Self Contained Binary
 
-WIP
+[Releases](https://github.com/aki-null/MotionFrame/releases)
 
 ### Setup
 
