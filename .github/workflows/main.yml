@@ -36,7 +36,7 @@ jobs:
           spec: 'app/MotionFrame.py'
           requirements: 'app/requirements.txt'
           exe_path: './build'
-          options: --name "MotionFrame", --windowed, --add-data "app/translation;translation",
+          options: --name "MotionFrame", --windowed, --add-data=app/translation:translation,
 
       - uses: skymatic/code-sign-action@v3.0.0
         if: matrix.os == 'windows-latest'
