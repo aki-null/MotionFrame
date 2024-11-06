@@ -35,7 +35,7 @@ jobs:
           python_ver: '3.12.7'
           spec: 'MotionFrame.spec'
           requirements: 'app/requirements.txt'
-          exe_path: './build'
+          exe_path: './dist'
 
       - uses: skymatic/code-sign-action@v3.0.0
         if: matrix.os == 'windows-latest'
@@ -45,7 +45,7 @@ jobs:
           certificatesha1: '${{ secrets.CERTHASH }}'
           description: 'MotionFrame'
           timestampUrl: 'http://timestamp.digicert.com'
-          folder: 'build'
+          folder: 'dist'
           recursive: true
 
       - name: Upload Artifact
