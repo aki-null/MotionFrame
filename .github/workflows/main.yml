@@ -53,5 +53,5 @@ jobs:
         with:
           name: ${{ matrix.os }} Build
           path: |
-            build
+            dist
           include-hidden-files: true
