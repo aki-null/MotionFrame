@@ -33,10 +33,9 @@ jobs:
         uses: sayyid5416/pyinstaller@v1
         with:
           python_ver: '3.12.7'
-          spec: 'app/MotionFrame.py'
+          spec: 'MotionFrame.spec'
           requirements: 'app/requirements.txt'
           exe_path: './build'
-          options: --name "Motion Frame", --windowed, --add-data=app/translation:translation,
 
       - uses: skymatic/code-sign-action@v3.0.0
         if: matrix.os == 'windows-latest'
