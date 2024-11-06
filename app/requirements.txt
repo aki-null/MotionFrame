@@ -1,5 +1,4 @@
 imageio==2.34.1
-Nuitka==2.1
 numpy==1.26.4
 opencv-python==4.9.0.80
 ordered-set==4.1.0
