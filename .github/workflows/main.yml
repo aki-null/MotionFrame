@@ -32,7 +32,7 @@ jobs:
       - name: Build Executable
         uses: sayyid5416/pyinstaller@v1
         with:
-          python_ver: '3.10'
+          python_ver: '3.12.7'
           spec: 'app/MotionFrame.py'
           requirements: 'app/requirements.txt'
           exe_path: './build'
