@@ -296,6 +296,21 @@ fn build_matrices_parallel(
         });
 }
 
+/// Regularization epsilon added to the structure-tensor determinant before the
+/// 2×2 solve, matching `OpenCV`'s `FarnebackUpdateFlow`.
+///
+/// This value is ABSOLUTE while the determinant scales as the 4th power of the
+/// input image's local contrast, so it doubles as a hard contrast gate: any
+/// region whose determinant lands below it has its flow driven to ~0 —
+/// overwriting whatever the coarser pyramid level had estimated. Low-contrast
+/// content (smooth smoke interiors, for instance) falls under the gate
+/// across large contiguous areas and loses its motion entirely.
+///
+/// `crate::flow::contrast::analysis_gain` reads this constant to size the
+/// uniform gain that lifts such content back above the gate. Keep the two in
+/// sync: they are one calibration.
+pub(crate) const FLOW_REGULARIZATION: f32 = 1e-3;
+
 /// Solve flow in parallel by row.
 fn solve_flow_parallel(flow: &mut Flow, ws: &UpdateWorkspace, w: usize, _h: usize, scale: f32) {
     let sm0 = &ws.smoothed[0];
@@ -317,8 +332,7 @@ fn solve_flow_parallel(flow: &mut Flow, ws: &UpdateWorkspace, w: usize, _h: usiz
                 let h1_s = sm3[idx] * scale;
                 let h2_s = sm4[idx] * scale;
 
-                // Regularization epsilon matching OpenCV FarnebackUpdateFlow
-                let idet = 1.0 / (g11_s.mul_add(g22_s, -(g12_s * g12_s)) + 1e-3);
+                let idet = 1.0 / (g11_s.mul_add(g22_s, -(g12_s * g12_s)) + FLOW_REGULARIZATION);
                 let flow_x = g22_s.mul_add(h1_s, -(g12_s * h2_s)) * idet;
                 let flow_y = g11_s.mul_add(h2_s, -(g12_s * h1_s)) * idet;
 
@@ -359,8 +373,15 @@ fn sep_conv_horiz_row(
     }
 
     // Interior: SIMD path (no clamping needed)
-    let interior_start = half;
-    let interior_end = if w > half { w - half } else { half };
+    //
+    // `half.min(w)`, not `half`: for a row shorter than the kernel half-width
+    // there is no interior at all, and an unclamped `half` makes `simd_end`
+    // exceed the row length — the scalar-tail slice below then panics. The
+    // left-border loop above already wrote the whole row in that case, so the
+    // interior and tail must both collapse to empty. Rows at least `half` wide
+    // are unaffected.
+    let interior_start = half.min(w);
+    let interior_end = if w > half { w - half } else { interior_start };
     let interior_len = interior_end.saturating_sub(interior_start);
     let simd_end = interior_start + (interior_len / 4) * 4;
 
@@ -553,7 +574,7 @@ fn sample_poly_bilinear(poly: &PolyImage, fx: f32, fy: f32, w: usize, h: usize) 
 ///   `optflowgf.cpp::FarnebackUpdateFlow_GaussianBlur`:
 ///     `int m = block_size/2; double sigma = m*0.3;`
 /// For winsize=15 this gives sigma=2.1, narrower than `getGaussianKernel`'s 2.6.
-fn build_gaussian_1d(winsize: u32) -> Vec<f32> {
+pub(crate) fn build_gaussian_1d(winsize: u32) -> Vec<f32> {
     let n = winsize as usize;
     // winsize <= 1 gives sigma = 0, which makes the exp() argument 0/0 = NaN and
     // poisons the whole flow field. Floor sigma to the value winsize=2 already

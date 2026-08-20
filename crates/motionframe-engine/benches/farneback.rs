@@ -62,6 +62,21 @@ fn bench_farneback_400(c: &mut Criterion) {
     });
 }
 
+/// The configuration the pipeline actually runs (`winsize: 31`), tracked
+/// separately from the frozen `default()` parity baseline above.
+///
+/// The separable smooth in `update_flow_with_workspace` is O(winsize) per pixel
+/// per component per iteration per level and dominates the inner loop, so a
+/// regression there is invisible in the `default()` cases.
+fn bench_farneback_400_pipeline_tuned(c: &mut Criterion) {
+    let g1 = synthetic_gradient(400, 400);
+    let g2 = shift(&g1, 5.0, 3.0);
+    let params = FarnebackParams::pipeline_tuned();
+    c.bench_function("farneback 400x400 pipeline-tuned", |b| {
+        b.iter(|| farneback(&g1, &g2, &params));
+    });
+}
+
 fn bench_pipeline_e2e(c: &mut Criterion) {
     use motionframe_engine::io::InMemoryFrames;
     use motionframe_engine::pipeline::run::run_pipeline;
@@ -113,6 +128,7 @@ criterion_group!(
     benches,
     bench_farneback_256,
     bench_farneback_400,
+    bench_farneback_400_pipeline_tuned,
     bench_pipeline_e2e
 );
 criterion_main!(benches);

@@ -195,7 +195,7 @@ pub fn run_pipeline(
         .collect();
 
     // 3. Convert to grayscale (BT.601 via `OpenCV`-compatible fixed-point) — parallelized
-    let gray_frames: Vec<ImageF32> = premul_frames.par_iter().map(rgba_to_gray_f32).collect();
+    let mut gray_frames: Vec<ImageF32> = premul_frames.par_iter().map(rgba_to_gray_f32).collect();
 
     // 4. Compute atlas dimensions and frame layout
     let (atlas_cols, atlas_rows) = opts.atlas_dims;
@@ -237,6 +237,20 @@ pub fn run_pipeline(
         opts.frame_skip,
         opts.resize_algorithm,
     );
+
+    // 6a. Lift low-contrast material above Farneback's fixed regularization
+    // gate. One gain for the whole sequence — a per-frame gain would make the
+    // frames incomparable and corrupt the flow. Resolves to 1.0 (a no-op) for
+    // material that is already above the gate. See `flow::contrast`.
+    //
+    // Measured over the prefix the flow stage actually reads, not the full
+    // decode: trailing frames that no batch touches would otherwise skew the
+    // gain. Applied to the whole vector regardless — the tail is unused, and
+    // scaling it keeps every frame on one common scale.
+    let analysis_gain =
+        crate::flow::contrast::analysis_gain(&gray_frames[..frames_needed], &opts.farneback);
+    crate::flow::contrast::apply_gain(&mut gray_frames, analysis_gain);
+    let gray_frames = gray_frames;
 
     // 7. Build motion vectors (only for the frames used in the atlas).
     // Farneback dominates the wall clock. Progress reports are throttled from
