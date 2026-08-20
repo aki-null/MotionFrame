@@ -1,6 +1,6 @@
 [package]
 name = "motionframe-web-worker"
-version = "2.0.0"
+version = "2.1.0"
 edition = "2021"
 rust-version = "1.95"
 description = "MotionFrame engine wasm worker"
@@ -24,7 +24,7 @@ image = { version = "=0.25.10", default-features = false, features = ["tga", "pn
 log = "=0.4.29"
 console_log = "=1.0.0"
 thiserror = "=2.0.18"
-lru = "=0.18.0"
+lru = "=0.18.2"
 serde_bytes = "=0.11.19"
 
 [dependencies.web-sys]
